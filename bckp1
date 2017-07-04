@@ -1,0 +1,199 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.KeyEvent;
+ 
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JCheckBox;
+import javax.swing.BorderFactory;
+
+ 
+public class TestClass {
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+			EventQueue.invokeLater(new Runnable(){
+				public void run() {
+					DialogFrame frame = new DialogFrame();
+					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					frame.setVisible(true);
+					//frame.showServers();
+				}
+			});
+	}
+ 
+}
+/**
+* Фрейм содержащий меню. При выборе пункта File->About
+* отображается диалоговое окно.
+*/
+class DialogFrame extends JFrame{
+	public static final int DEFAULT_WIDTH = 500;
+	public static final int DEFAULT_HEIGHT = 400;
+	private AboutDialog aboutDialog;
+	private ScanDialog scanDialog;
+	private ExitDialog exitDialog;
+	//
+	public DialogFrame()
+	{
+		setTitle("Log Cleaner 0.1");
+		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+ 
+		// Создание меню
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		JMenuItem scanItem = new JMenuItem("Scan");
+		menuBar.add(scanItem);
+		JMenuItem aboutItem = new JMenuItem("About");
+		menuBar.add(aboutItem);
+		JMenuItem exitItem = new JMenuItem("Exit");
+		menuBar.add(exitItem);
+		//item Scan is called, the core part	
+		scanItem.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event){
+				if(scanDialog == null) scanDialog = new ScanDialog(DialogFrame.this); // first time called
+				scanDialog.setVisible(true); // make dialog visible
+				//showServers();
+			}
+		});
+
+		// when "about" is chosen, dialog "about" is called
+		aboutItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				if(aboutDialog == null) aboutDialog = new AboutDialog(DialogFrame.this); // first time called
+				aboutDialog.setVisible(true); // make dialog visible
+			}
+		});
+		// when "exit" is chosen, programm is closed
+		exitItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				//System.exit(0);//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				if(exitDialog == null) exitDialog = new ExitDialog(DialogFrame.this);
+				exitDialog.setVisible(true);
+			}
+		});
+	}
+	// public void showServers(){
+	// 	String srvrs = scanDialog.returnServers();
+	// 	add(new JLabel("Servers chosen:"), BorderLayout.SOUTH);
+	// 	add(new JLabel(srvrs), BorderLayout.CENTER);
+	// }
+ 
+	
+}
+ 
+/*
+ * Модальное диалоговое окно отображает сообщение
+ * и ожидает щелчка на кнопке ОК.
+ */
+ 
+class AboutDialog extends JDialog{
+	public AboutDialog(JFrame owner){
+		super(owner, "About Log Cleaner 0.1", true);
+		add(new JLabel("Log Cleaner 0.1 by mad3e7cat"), BorderLayout.CENTER);
+ 
+		// При активизации кнопки ОК диалогове окно закрывается.
+		JButton ok = new JButton("OK");
+		ok.addActionListener(new ActionListener() { 
+			public void actionPerformed(ActionEvent event) {
+				setVisible(false);
+			}
+		});
+		// Кнопка ОК помещается в нижнюю часть окна.
+		JPanel panel = new JPanel();
+		panel.add(ok);
+		add(panel, BorderLayout.EAST);
+		setSize(300, 160);
+	}
+}
+//
+class ScanDialog extends JDialog{
+	private JCheckBox nginxBox;
+	private JCheckBox apacheBox;
+	private String servers;
+	public ScanDialog(JFrame owner){
+		super(owner, "Scan for logs", true);
+		servers = "";
+		//init checkboxes
+		nginxBox = new JCheckBox("nginx");
+		nginxBox.setMnemonic(KeyEvent.VK_N);
+		nginxBox.setSelected(false);
+		apacheBox = new JCheckBox("Apache");
+		nginxBox.setMnemonic(KeyEvent.VK_A);
+		apacheBox.setSelected(false);
+		//
+		//add panel and add checkboxes to it
+		JPanel checkPanel = new JPanel(new GridLayout(0,1));
+		checkPanel.add(nginxBox);
+		checkPanel.add(apacheBox);
+		add(checkPanel, BorderLayout.LINE_START); 
+		checkPanel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20)); // 20, 20, 20, 20
+		add(new JLabel("Choose servers, used on this system:"), BorderLayout.NORTH);
+		//add button OK to checkPanel
+		JButton okButton = new JButton("OK");
+		okButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				setVisible(false);
+			}
+		});
+		//maybe there's no need in "cancel" button
+		JButton cancelButton = new JButton("CANCEL");
+		cancelButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				setVisible(false);
+			}
+		});
+		JPanel buttonContainer = new JPanel(); // create a container for ok and cancel buttons
+		buttonContainer.add(okButton, BorderLayout.EAST);
+		buttonContainer.add(cancelButton, BorderLayout.WEST);
+		checkPanel.add(buttonContainer);
+		setSize(500, 400);
+	}
+	public void itemStateChanged(ItemEvent e){
+		Object source = e.getItemSelectable();
+		if(source == nginxBox){
+			System.out.println("nginx selected...");
+			servers+="n";
+		}
+		if(source == apacheBox){
+			System.out.println("Apache selected...");
+			servers+="a";
+		}
+	}
+	public String returnServers(){
+		return servers;
+	}
+}
+
+class ExitDialog extends JDialog{
+	ExitDialog(JFrame owner){
+		super(owner, "Exit", true);
+		add(new JLabel("Are you sure?"));
+		JPanel buttons = new JPanel();
+		JButton ok = new JButton("OK");
+		ok.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				System.exit(0);
+			}
+		});
+		JButton cancel = new JButton("CANCEL");
+		cancel.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				setVisible(false);
+			}
+		});
+		buttons.add(ok, BorderLayout.EAST);
+		buttons.add(cancel, BorderLayout.WEST);
+		add(buttons, BorderLayout.SOUTH);
+		setSize(300, 160);
+	}
+}
