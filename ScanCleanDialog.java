@@ -1,0 +1,3 @@
+class ScanCleanDialog extends JDialog{
+	
+}

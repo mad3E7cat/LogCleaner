@@ -9,7 +9,8 @@ class DialogFrame extends JFrame{
 	public static final int DEFAULT_WIDTH = 500;
 	public static final int DEFAULT_HEIGHT = 400;
 	private AboutDialog aboutDialog;
-	private ScanDialog scanDialog;
+	private ChooseDialog chooseDialog;
+	private ScanCleanDialog scanCleanDialog;
 	private ExitDialog exitDialog;
 	//
 	public DialogFrame()
@@ -17,20 +18,30 @@ class DialogFrame extends JFrame{
 		setTitle("Log Cleaner 0.1");
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
  		boolean actionFinished = false;
-		// Создание меню
+		// Create menu
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		JMenuItem scanItem = new JMenuItem("Scan");
-		menuBar.add(scanItem);
+		JMenu scanMenu = new JMenu("Scan");
+		JMenuItem chooseOsItem = new JMenuItem("Choose OS...");
+		JMenuItem scanAndCleanItem = new JMenuItem("Scan and Clean...");
+		scanMenu.add(chooseOsItem);
+		scanMenu.add(scanAndCleanItem);
+		menuBar.add(scanMenu);
 		JMenuItem aboutItem = new JMenuItem("About");
 		menuBar.add(aboutItem);
 		JMenuItem exitItem = new JMenuItem("Exit");
 		menuBar.add(exitItem);
 		//item Scan is called, the core part	
-		scanItem.addActionListener(new ActionListener(){
+		chooseOsItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
-				if(scanDialog == null) scanDialog = new ScanDialog(DialogFrame.this); // first time called
-				scanDialog.setVisible(true); // make dialog visible
+				if(chooseDialog == null) chooseDialog = new ChooseDialog(DialogFrame.this); // 1st time called
+				chooseDialog.setVisible(true);
+			}
+		});	
+		scanAndCleanItem.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent event){
+				if(scanCleanDialog == null) scanCleanDialog = new scanCleanDialog(DialogFrame.this);
+				scanCleanDialog.setVisible(true);
 			}
 		});
 		// when "about" is chosen, dialog "about" is called

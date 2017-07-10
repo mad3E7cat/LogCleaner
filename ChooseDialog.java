@@ -10,14 +10,14 @@ import java.awt.event.KeyEvent;
 /*
  Modal dialog window
 */
-class ScanDialog extends JDialog{
+class ChooseDialog extends JDialog{
 	private JCheckBox nginxBox;
 	private JCheckBox apacheBox;
 	private boolean nginxChosen;
 	private boolean apacheChosen;
 	private String servers;
 	private JLabel serverInfoLabel;
-	public ScanDialog(JFrame owner){
+	public ChooseDialog(JFrame owner){
 		super(owner, "Scan for logs", true);
 		servers = "";
 		//init checkboxes
