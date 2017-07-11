@@ -1,12 +1,13 @@
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Dimension;
 //
 /*
 Menu-frame with items "Scan", "About", "Exit".
 */
 class DialogFrame extends JFrame{
-	public static final int DEFAULT_WIDTH = 500;
+	public static final int DEFAULT_WIDTH = 600;
 	public static final int DEFAULT_HEIGHT = 400;
 	private AboutDialog aboutDialog;
 	private ChooseDialog chooseDialog;
@@ -22,6 +23,7 @@ class DialogFrame extends JFrame{
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		JMenu scanMenu = new JMenu("Scan");
+		scanMenu.setPreferredSize(new Dimension(200, 25));
 		JMenuItem chooseOsItem = new JMenuItem("Choose OS...");
 		JMenuItem scanAndCleanItem = new JMenuItem("Scan and Clean...");
 		scanMenu.add(chooseOsItem);
@@ -40,7 +42,7 @@ class DialogFrame extends JFrame{
 		});	
 		scanAndCleanItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
-				if(scanCleanDialog == null) scanCleanDialog = new scanCleanDialog(DialogFrame.this);
+				if(scanCleanDialog == null) scanCleanDialog = new ScanCleanDialog(DialogFrame.this);
 				scanCleanDialog.setVisible(true);
 			}
 		});
@@ -54,14 +56,10 @@ class DialogFrame extends JFrame{
 		// when "exit" is chosen, programm is closed
 		exitItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				//System.exit(0);//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				if(exitDialog == null) exitDialog = new ExitDialog(DialogFrame.this);
 				exitDialog.setVisible(true);
 			}
 		});
 	}
-	// public String showServers(){
-	// 	return scanDialog.returnServers();
-	// }
 }
 //
