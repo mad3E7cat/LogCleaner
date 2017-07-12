@@ -9,6 +9,8 @@ Menu-frame with items "Scan", "About", "Exit".
 class DialogFrame extends JFrame{
 	public static final int DEFAULT_WIDTH = 600;
 	public static final int DEFAULT_HEIGHT = 400;
+	private boolean debianChosen;
+	private boolean windowsChosen;
 	private AboutDialog aboutDialog;
 	private ChooseDialog chooseDialog;
 	private ScanCleanDialog scanCleanDialog;
@@ -18,7 +20,8 @@ class DialogFrame extends JFrame{
 	{
 		setTitle("Log Cleaner 0.1");
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
- 		boolean actionFinished = false;
+ 		debianChosen = false;
+		windowsChosen = false;
 		// Create menu
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -38,6 +41,7 @@ class DialogFrame extends JFrame{
 			public void actionPerformed(ActionEvent event){
 				if(chooseDialog == null) chooseDialog = new ChooseDialog(DialogFrame.this); // 1st time called
 				chooseDialog.setVisible(true);
+				
 			}
 		});	
 		scanAndCleanItem.addActionListener(new ActionListener(){
@@ -60,6 +64,18 @@ class DialogFrame extends JFrame{
 				exitDialog.setVisible(true);
 			}
 		});
+	}
+	public void setWindows(boolean flag){
+		windowsChosen = flag;
+	}
+	public void setDebian(boolean flag){
+		debianChosen = flag;
+	}
+	public boolean isWindows(){
+		return windowsChosen;
+	}
+	public boolean isDebian(){
+		return debianChosen;
 	}
 }
 //

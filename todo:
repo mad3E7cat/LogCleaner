@@ -1,8 +1,8 @@
 todo:
 DONE:Renaming in ChooseDialog
-Set string or else to mark chosen OS's !should be the fields of parent dialog! for the scan stage
+DONE:Set string or else to mark chosen OS's !should be the fields of parent dialog! for the scan stage
 Write Scan stage
-	- progress bar
+	- DONE: progress bar
 	- files search due to system chosen
 	- log-files clearing
-	
+

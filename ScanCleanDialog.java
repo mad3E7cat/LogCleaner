@@ -12,15 +12,13 @@ class ScanCleanDialog extends JDialog{
 		super(owner, "Scan and Clean", true);
 		//
 		JProgressBar progressBar = new JProgressBar();
-		JLabel progressLabel = new JLabel("Scanning for logs...");
-		progressBar.setSize(400, 25);
+		JLabel progressLabel = new JLabel("Scanning for logs...", javax.swing.SwingConstants.CENTER);
+		progressBar.setSize(300, 25);
 		progressBar.setIndeterminate(true);
-		progressLabel.add(progressBar, BorderLayout.CENTER);
-		add(progressLabel);
-		progressBar.setMinimum(0);
-		progressBar.setMaximum(100);
-		
+		progressLabel.add(progressBar);
+		add(progressLabel, BorderLayout.CENTER);
 		//
-		setSize(600, 400);	
+		
+		setSize(300, 200);	
 	}
 }

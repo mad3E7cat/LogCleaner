@@ -13,36 +13,34 @@ import java.awt.event.KeyEvent;
 class ChooseDialog extends JDialog{
 	private JCheckBox debianBox;
 	private JCheckBox windowsBox;
-	private boolean debianChosen;
-	private boolean windowsChosen;
+	// boolean debianChosen;
+	//private boolean windowsChosen;
 	private String systems;
 	private JLabel serverInfoLabel;
-	public ChooseDialog(JFrame owner){
+	public ChooseDialog(DialogFrame owner){ // JFrame
 		super(owner, "Scan for OS's", true);
 		systems = "";
 		//init checkboxes
 		debianBox = new JCheckBox("Debian");
 		debianBox.setMnemonic(KeyEvent.VK_N);
-		debianBox.setSelected(false);
 		windowsBox = new JCheckBox("Windows XP");
 		debianBox.setMnemonic(KeyEvent.VK_A);
-		windowsBox.setSelected(false);
 		//
-		//add panel and add checkboxes to it
+		//add panel and add checkboxes to this panel
 		JPanel checkPanel = new JPanel(new GridLayout(0,1));
 		checkPanel.add(debianBox);
 		checkPanel.add(windowsBox);
 		// add panel to Dialog
 		add(checkPanel, BorderLayout.LINE_START);
 		serverInfoLabel = new JLabel(""); 
-		checkPanel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20)); // 20, 20, 20, 20
-		add(new JLabel("Choose operating system:"), BorderLayout.NORTH); // add text
+		//checkPanel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20)); // 20, 20, 20, 20
+		add(new JLabel("Choose operating system(only one):"), BorderLayout.NORTH); // add text
 		debianBox.addItemListener(new ItemListener(){ // handle action, when "debian" checkbox is chosen
 			public void itemStateChanged(ItemEvent e){
 				Object source = e.getItemSelectable();
 				if((source == debianBox) && (e.getStateChange() == 1)){
-					systems += "\nDebian\n";
-					debianChosen = true;
+					systems = "\nDebian\n";
+					owner.setDebian(true);
 				}
 			}	
 		});
@@ -50,8 +48,8 @@ class ChooseDialog extends JDialog{
 			public void itemStateChanged(ItemEvent e){
 				Object source = e.getItemSelectable();
 				if((source == windowsBox) && (e.getStateChange() == 1)){
-					systems += "\nWindows XP\n";
-					windowsChosen = true;
+					systems = "\nWindows XP\n";
+					owner.setWindows(true);
 				}
 			}
 		});
@@ -59,11 +57,16 @@ class ChooseDialog extends JDialog{
 		JButton okButton = new JButton("OK");
 		okButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				owner.remove(serverInfoLabel);
+				debianBox.setSelected(false);
+				windowsBox.setSelected(false);
 				setVisible(false);
-				serverInfoLabel = new JLabel("");
-				serverInfoLabel = new JLabel("Systems chosen: " + systemsOutput());
+				serverInfoLabel = new JLabel("Systems chosen: " + systems);
 				owner.add(serverInfoLabel, BorderLayout.NORTH);
 				owner.setVisible(true);
+				systems = "";
+				owner.setWindows(false);
+				owner.setDebian(false);
 			}
 		});
 		//maybe there's no need in "cancel" button
@@ -78,11 +81,5 @@ class ChooseDialog extends JDialog{
 		buttonContainer.add(cancelButton, BorderLayout.WEST);
 		checkPanel.add(buttonContainer);
 		setSize(600, 400);
-	}
-	public String systemsOutput(){
-		String result = "";
-		if(systems.contains("Debian")) result += "\nDebian\n";
-		if(systems.contains("Windows XP")) result += "\nWindows XP\n";
-		return result;
 	}
 }
