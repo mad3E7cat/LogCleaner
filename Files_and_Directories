@@ -1,0 +1,39 @@
+//// Files
+**alternatives.log - information about program update-alternatives. These are symbolic lonks to commands or libs. In case user sets his own alternatives, might be cleaned.
+**auth.log - Contains system authorization information, including user logins and authentication machinsm that were used. FAILURES LOGGED
+**bootstrap.log - logs java SAS programms errors  (Statistical Analysis System)
+**daemon.log - daemons activities logged
+**dpkg.log - packages removed or installed by dpkg daemon 
+*fontconfig.log - 
+**kern.log - also logs attached devices
+**macchanger.log - macchanger working logs
+**user.log - also logs used applications
+**wvdialconf.log - a program for modem dialing
+**Xorg.0.log - also logs attached devices(USB Camera for example)
+**messages - things that are logged in /var/log/messages: mail, cron, daemon, kern, auth, etc.
+**btmp - failed login attempts
+**debug - also logs some used applications
+**dmesg
+**faillog - failed log attempts
+**lastlog - daemons used by logged in users
+**syslog - also logs names of used applications
+**wtmp - for last command, shows last booted system
+//// Directories
+**apache2 - apache logs
+	access.log  
+	error.log  
+	other_vhosts_access.log
+**apt - apt logs (apt-get)
+	history.log  
+	term.log
+DELETE THE WHOLE DIRECTORY**chkrootkit - default checker for sighns of rootkits
+DELETE THE WHOLE DIRECTORY**couchdb - CouchDB usage log	
+DELETE THE WHOLE DIRECTORY**exim4 - mail daemon
+DELETE THE WHOLE DIRECTORY**mysql
+DELETE THE WHOLE DIRECTORY**ntpstats
+DELETE THE WHOLE DIRECTORY**postgresql
+DELETE THE WHOLE DIRECTORY**samba
+DELETE THE WHOLE DIRECTORY**speech-dispatcher
+**stunnel4 - SSL
+	stunnel.log
+DELETE THE WHOLE DIRECTORY**sysstat
