@@ -48,6 +48,14 @@ class ScanCleanDialog extends JDialog{
 		}
 		if(owner.isWindows()){
 			checkedFiles = new String[windowsLogs.length];
+			for (int i = 0; i < windowsLogs.length; i++) { // change progressbar here
+				checkFile = new File(windowsLogs[i]);
+				if(checkFile.canWrite() && checkFile.exists()){
+					checkedFiles[i] = windowsLogs[i];
+					listModel.addElement(checkedFiles[i]);
+					checkedFilesCounter++;
+				}
+			}
 			//
 		}
 		final JList<String> list = new JList<>(listModel);
@@ -62,16 +70,17 @@ class ScanCleanDialog extends JDialog{
         cleanButton.setFocusable(false);
         cleanButton.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent e){
-        		for (int i = 0; i < (owner.isDebian() ? debianLogs.length : windowsLogs.length); i++) {
-        			if(owner.isDebian()){
-        				File temp = new File(checkedFiles[i]);
-        				try{
-        					PrintWriter eraser = new PrintWriter(temp);
-        					eraser.write("");
-        					eraser.close();
-        				}catch(FileNotFoundException exc){
-        					System.out.println(exc);
-        				}
+        		int border = 0;
+        		if(owner.isDebian()) border = debianLogs.length;
+        		if(owner.isWindows()) border = windowsLogs.length;
+        		for (int i = 0; i < border; i++) {
+        			File temp = new File(checkedFiles[i]);
+        			try{
+        				PrintWriter eraser = new PrintWriter(temp);
+        				eraser.write("");
+        				eraser.close();
+        			}catch(FileNotFoundException exc){
+        				System.out.println("!!!!!!!!!!!!!!!!!!" + exc);
         			}
         		}
         	}
