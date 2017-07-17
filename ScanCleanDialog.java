@@ -8,7 +8,9 @@ import java.awt.FlowLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
-//final String[] windowsLogs = {"", "", ""};
+import java.io.PrintWriter;
+import java.io.FileNotFoundException;
+//
 class ScanCleanDialog extends JDialog{
 	private String[] debianLogs = {"/var/log/alternatives.log", "/var/log/auth.log", "/var/log/bootstrap.log", "/var/log/daemon.log", "/var/log/dpkg.log",
 							 "/var/log/kernlog.log", "/var/log/macchanger.log", "/var/log/user.log", "/var/log/wvdialconf.log", "/var/log/Xorg.0.log",
@@ -16,7 +18,11 @@ class ScanCleanDialog extends JDialog{
 							 "/var/log/lastlog", "/var/log/syslog", "/var/log/wtmp", "/var/log/apache2/access.log", "/var/log/apache2/error.log",
 							 "/var/log/apache2/other_vhosts_access.log", "/var/log/apt/history.log", "/var/log/apt/term.log", "/var/log/chkrootkit", 
 							 "/var/log/stunnel4/stunnel.log"};
+	private String[] windowsLogs = {"C:\\WINDOWS\\system32\\config\\Internet.evt", "C:\\WINDOWS\\system32\\config\\SecEvent.evt", "C:\\WINDOWS\\system32\\config\\SysEvent.evt",
+									"C:\\WINDOWS\\system32\\config\\system.sav", "C:\\WINDOWS\\system32\\config\\AppEvent.evt", "C:\\WINDOWS\\system32\\config\\default.sav",
+									"C:\\WINDOWS\\system32\\config\\software.sav"};
 	private int checkedFilesCounter;
+	public String[] checkedFiles;
 	//
 	public ScanCleanDialog(DialogFrame owner){ // JFrame
 		super(owner, "Scan and Clean", true);
@@ -26,10 +32,11 @@ class ScanCleanDialog extends JDialog{
 		mainPanel.setLayout(new BorderLayout(5,5));
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		final DefaultListModel<String> listModel = new DefaultListModel<>();
-		String[] checkedFiles = new String[debianLogs.length];
+		// String[] checkedFiles = null;
 		File checkFile = null;
 		setTitle("isDebian(): " + owner.isDebian() + " isWindows(): " + owner.isWindows());
 		if(owner.isDebian()){
+			checkedFiles = new String[debianLogs.length];
 			for (int i = 0; i < debianLogs.length; i++) { // change progressbar here
 				checkFile = new File(debianLogs[i]);
 				if(checkFile.canWrite() && checkFile.exists()){
@@ -40,7 +47,8 @@ class ScanCleanDialog extends JDialog{
 			}
 		}
 		if(owner.isWindows()){
-			int i = 0;
+			checkedFiles = new String[windowsLogs.length];
+			//
 		}
 		final JList<String> list = new JList<>(listModel);
         list.setFocusable(false);
@@ -54,10 +62,18 @@ class ScanCleanDialog extends JDialog{
         cleanButton.setFocusable(false);
         cleanButton.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent e){
-        		int i = 0;
-        		//
-        		// clean files
-        		//
+        		for (int i = 0; i < (owner.isDebian() ? debianLogs.length : windowsLogs.length); i++) {
+        			if(owner.isDebian()){
+        				File temp = new File(checkedFiles[i]);
+        				try{
+        					PrintWriter eraser = new PrintWriter(temp);
+        					eraser.write("");
+        					eraser.close();
+        				}catch(FileNotFoundException exc){
+        					System.out.println(exc);
+        				}
+        			}
+        		}
         	}
         });
         buttonsPanel.add(cleanButton);
