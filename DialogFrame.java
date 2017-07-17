@@ -11,6 +11,7 @@ class DialogFrame extends JFrame{
 	public static final int DEFAULT_HEIGHT = 400;
 	private boolean debianChosen;
 	private boolean windowsChosen;
+	private String system;
 	private AboutDialog aboutDialog;
 	private ChooseDialog chooseDialog;
 	private ScanCleanDialog scanCleanDialog;
@@ -22,6 +23,7 @@ class DialogFrame extends JFrame{
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
  		debianChosen = false;
 		windowsChosen = false;
+		system = "";
 		// Create menu
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -77,5 +79,11 @@ class DialogFrame extends JFrame{
 	public boolean isDebian(){
 		return debianChosen;
 	}
+	// public void setSystem(String sys){
+	// 	system = sys;
+	// }
+	// public String getSystem(){
+	// 	return system; 
+	// }
 }
 //

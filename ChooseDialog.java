@@ -41,6 +41,7 @@ class ChooseDialog extends JDialog{
 				if((source == debianBox) && (e.getStateChange() == 1)){
 					systems = "\nDebian\n";
 					owner.setDebian(true);
+					owner.setWindows(false);
 				}
 			}	
 		});
@@ -50,6 +51,7 @@ class ChooseDialog extends JDialog{
 				if((source == windowsBox) && (e.getStateChange() == 1)){
 					systems = "\nWindows XP\n";
 					owner.setWindows(true);
+					owner.setDebian(false);
 				}
 			}
 		});
@@ -65,8 +67,8 @@ class ChooseDialog extends JDialog{
 				owner.add(serverInfoLabel, BorderLayout.NORTH);
 				owner.setVisible(true);
 				systems = "";
-				owner.setWindows(false);
-				owner.setDebian(false);
+				owner.setWindows(true);
+				owner.setDebian(true);
 			}
 		});
 		//maybe there's no need in "cancel" button
