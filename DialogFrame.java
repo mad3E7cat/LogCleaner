@@ -21,8 +21,8 @@ class DialogFrame extends JFrame{
 	{
 		setTitle("Log Cleaner 0.1");
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
- 		debianChosen = false;
-		windowsChosen = false;
+ 	// 	debianChosen = false;
+		// windowsChosen = false;
 		system = "";
 		// Create menu
 		JMenuBar menuBar = new JMenuBar();
@@ -41,6 +41,7 @@ class DialogFrame extends JFrame{
 		//item Scan is called, the core part	
 		chooseOsItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
+				//chooseDialog = null;
 				if(chooseDialog == null) chooseDialog = new ChooseDialog(DialogFrame.this); // 1st time called
 				chooseDialog.setVisible(true);
 				
@@ -48,6 +49,7 @@ class DialogFrame extends JFrame{
 		});	
 		scanAndCleanItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
+				scanCleanDialog = null;
 				if(scanCleanDialog == null) scanCleanDialog = new ScanCleanDialog(DialogFrame.this);
 				scanCleanDialog.setVisible(true);
 			}

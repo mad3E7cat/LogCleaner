@@ -13,7 +13,7 @@ import java.awt.event.KeyEvent;
 class ChooseDialog extends JDialog{
 	private JCheckBox debianBox;
 	private JCheckBox windowsBox;
-	// boolean debianChosen;
+	//private boolean debianChosen;
 	//private boolean windowsChosen;
 	private String systems;
 	private JLabel serverInfoLabel;
@@ -63,12 +63,12 @@ class ChooseDialog extends JDialog{
 				debianBox.setSelected(false);
 				windowsBox.setSelected(false);
 				setVisible(false);
-				serverInfoLabel = new JLabel("Systems chosen: " + systems);
+				serverInfoLabel = new JLabel("Systems chosen: " + systems + " isDebian(): " + owner.isDebian() + " isWindows(): " + owner.isWindows());
 				owner.add(serverInfoLabel, BorderLayout.NORTH);
 				owner.setVisible(true);
 				systems = "";
-				owner.setWindows(true);
-				owner.setDebian(true);
+				// owner.setWindows(true);
+				// owner.setDebian(true);
 			}
 		});
 		//maybe there's no need in "cancel" button

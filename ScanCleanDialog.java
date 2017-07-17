@@ -21,8 +21,6 @@ class ScanCleanDialog extends JDialog{
 	public ScanCleanDialog(DialogFrame owner){ // JFrame
 		super(owner, "Scan and Clean", true);
 		setSize(500, 300);
-		if(owner.isDebian()) owner.setWindows(false);
-		if(owner.isWindows()) owner.setDebian(false);
 		checkedFilesCounter = 0;
 		JPanel mainPanel = new JPanel(); // main panel for list and buttons
 		mainPanel.setLayout(new BorderLayout(5,5));
@@ -40,6 +38,9 @@ class ScanCleanDialog extends JDialog{
 					checkedFilesCounter++;
 				}
 			}
+		}
+		if(owner.isWindows()){
+			int i = 0;
 		}
 		final JList<String> list = new JList<>(listModel);
         list.setFocusable(false);
@@ -70,8 +71,6 @@ class ScanCleanDialog extends JDialog{
         });
         buttonsPanel.add(cancelButton);
         add(mainPanel);
-        // owner.setDebian(false);
-        // owner.setWindows(false);
         //
         //JButton
 		// "/Desktop/LogCleaner/LogCleaner/test/1"
