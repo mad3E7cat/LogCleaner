@@ -1,0 +1,41 @@
+int files = owner.isDebian() ? debianLogs.length : windowsLogs.length;
+		JLabel infoPanel = new JLabel(files + " files are to be scanned...");
+		JPanel buttonsPanel0 = new JPanel();
+		JButton scanButton = new JButton("Scan");
+		JButton cancButton = new JButton("Cancel");
+		lines = 0;
+		scanButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				new Thread() {
+          			public void run() {
+            			try {
+				            	if(owner.isDebian()){
+									checkedFiles = new String[debianLogs.length];
+									for (int i = 0; i < debianLogs.length; i++) { // change progressbar here
+											InputStream in = new FileInputStream(debianLogs[i]);
+              								ProgressMonitorInputStream pm = 
+                  							new ProgressMonitorInputStream(owner,"Reading files...",in);
+                  							int c;
+              								while((c=pm.read()) != -1) {
+              									 lines += new File(debianLogs[i]).length();
+								            }
+								            pm.close();							
+								    }
+								}
+            			}catch(Exception ex) {
+              				ex.printStackTrace();
+            			}
+          			}
+        		}.start();
+        		setVisible(false);
+			}
+		});
+		buttonsPanel0.add(scanButton);
+		cancButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				setVisible(false);
+			}
+		});
+		buttonsPanel0.add(cancButton);
+		add(buttonsPanel0);
+		setVisible(true);

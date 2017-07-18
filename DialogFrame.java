@@ -1,8 +1,11 @@
-import javax.swing.*;
+import javax.swing.JDialog;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JMenuBar;
+import javax.swing.JFrame;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
-//
 /*
 Menu-frame with items "Scan", "About", "Exit".
 */
@@ -21,8 +24,6 @@ class DialogFrame extends JFrame{
 	{
 		setTitle("Log Cleaner 0.1");
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
- 	// 	debianChosen = false;
-		// windowsChosen = false;
 		system = "";
 		// Create menu
 		JMenuBar menuBar = new JMenuBar();
@@ -41,7 +42,6 @@ class DialogFrame extends JFrame{
 		//item Scan is called, the core part	
 		chooseOsItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent event){
-				//chooseDialog = null;
 				if(chooseDialog == null) chooseDialog = new ChooseDialog(DialogFrame.this); // 1st time called
 				chooseDialog.setVisible(true);
 				
@@ -81,11 +81,4 @@ class DialogFrame extends JFrame{
 	public boolean isDebian(){
 		return debianChosen;
 	}
-	// public void setSystem(String sys){
-	// 	system = sys;
-	// }
-	// public String getSystem(){
-	// 	return system; 
-	// }
 }
-//

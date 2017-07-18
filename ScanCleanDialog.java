@@ -1,16 +1,20 @@
-import javax.swing.*;
+//import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JList;
+import javax.swing.DefaultListModel;
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemListener;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.FlowLayout;
 import java.awt.event.ItemEvent;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.FileNotFoundException;
-import java.io.*;
+import java.io.InputStream;
+import java.io.FileInputStream;
 //
 class ScanCleanDialog extends JDialog{
 	private String[] debianLogs = {"/var/log/alternatives.log", "/var/log/auth.log", "/var/log/bootstrap.log", "/var/log/daemon.log", "/var/log/dpkg.log",
@@ -29,48 +33,6 @@ class ScanCleanDialog extends JDialog{
 	public ScanCleanDialog(DialogFrame owner){ // JFrame
 		super(owner, "Scan and Clean", true);
 		//
-		setSize(400, 200);
-		int files = owner.isDebian() ? debianLogs.length : windowsLogs.length;
-		JLabel infoPanel = new JLabel(files + " files are to be scanned...");
-		JPanel buttonsPanel0 = new JPanel();
-		JButton scanButton = new JButton("Scan");
-		JButton cancButton = new JButton("Cancel");
-		lines = 0;
-		scanButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				new Thread() {
-          			public void run() {
-            			try {
-				            	if(owner.isDebian()){
-									checkedFiles = new String[debianLogs.length];
-									for (int i = 0; i < debianLogs.length; i++) { // change progressbar here
-											InputStream in = new FileInputStream(debianLogs[i]);
-              								ProgressMonitorInputStream pm = 
-                  							new ProgressMonitorInputStream(owner,"Reading files...",in);
-                  							int c;
-              								while((c=pm.read()) != -1) {
-              									 lines += new File(debianLogs[i]).length();
-								            }
-								            pm.close();							
-								    }
-								}
-            			}catch(Exception ex) {
-              				ex.printStackTrace();
-            			}
-          			}
-        		}.start();
-        		setVisible(false);
-			}
-		});
-		buttonsPanel0.add(scanButton);
-		cancButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				setVisible(false);
-			}
-		});
-		buttonsPanel0.add(cancButton);
-		add(buttonsPanel0);
-		setVisible(true);
 		//
 		setSize(500, 300);
 		checkedFilesCounter = 0;
