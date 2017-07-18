@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.FileNotFoundException;
+import java.io.*;
 //
 class ScanCleanDialog extends JDialog{
 	private String[] debianLogs = {"/var/log/alternatives.log", "/var/log/auth.log", "/var/log/bootstrap.log", "/var/log/daemon.log", "/var/log/dpkg.log",
@@ -22,10 +23,55 @@ class ScanCleanDialog extends JDialog{
 									"C:\\WINDOWS\\system32\\config\\system.sav", "C:\\WINDOWS\\system32\\config\\AppEvent.evt", "C:\\WINDOWS\\system32\\config\\default.sav",
 									"C:\\WINDOWS\\system32\\config\\software.sav"};
 	private int checkedFilesCounter;
+	private int lines;
 	public String[] checkedFiles;
 	//
 	public ScanCleanDialog(DialogFrame owner){ // JFrame
 		super(owner, "Scan and Clean", true);
+		//
+		setSize(400, 200);
+		int files = owner.isDebian() ? debianLogs.length : windowsLogs.length;
+		JLabel infoPanel = new JLabel(files + " files are to be scanned...");
+		JPanel buttonsPanel0 = new JPanel();
+		JButton scanButton = new JButton("Scan");
+		JButton cancButton = new JButton("Cancel");
+		lines = 0;
+		scanButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				new Thread() {
+          			public void run() {
+            			try {
+				            	if(owner.isDebian()){
+									checkedFiles = new String[debianLogs.length];
+									for (int i = 0; i < debianLogs.length; i++) { // change progressbar here
+											InputStream in = new FileInputStream(debianLogs[i]);
+              								ProgressMonitorInputStream pm = 
+                  							new ProgressMonitorInputStream(owner,"Reading files...",in);
+                  							int c;
+              								while((c=pm.read()) != -1) {
+              									 lines += new File(debianLogs[i]).length();
+								            }
+								            pm.close();							
+								    }
+								}
+            			}catch(Exception ex) {
+              				ex.printStackTrace();
+            			}
+          			}
+        		}.start();
+        		setVisible(false);
+			}
+		});
+		buttonsPanel0.add(scanButton);
+		cancButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				setVisible(false);
+			}
+		});
+		buttonsPanel0.add(cancButton);
+		add(buttonsPanel0);
+		setVisible(true);
+		//
 		setSize(500, 300);
 		checkedFilesCounter = 0;
 		JPanel mainPanel = new JPanel(); // main panel for list and buttons
@@ -96,16 +142,5 @@ class ScanCleanDialog extends JDialog{
         });
         buttonsPanel.add(cancelButton);
         add(mainPanel);
-        //
-        //JButton
-		// "/Desktop/LogCleaner/LogCleaner/test/1"
-		// JProgressBar progressBar = new JProgressBar();
-		// JLabel progressLabel = new JLabel("Scanning for logs...", javax.swing.SwingConstants.CENTER);
-		// progressBar.setSize(300, 25);
-		// progressBar.setIndeterminate(true);
-		// progressLabel.add(progressBar);
-		// add(progressLabel, BorderLayout.CENTER);
-		// remove(progressLabel);
-		//
 	}
 }
