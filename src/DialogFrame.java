@@ -80,4 +80,7 @@ class DialogFrame extends JFrame{
 	public boolean isDebian(){
 		return debianChosen;
 	}
+	public String getSystem(){
+		return system;
+	}
 }

@@ -2,18 +2,25 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
+import javax.swing.JLabel;
 import javax.swing.DefaultListModel;
 import javax.swing.BorderFactory;
 import javax.swing.JDialog;
+import java.awt.Component;
+import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 import java.awt.event.ItemEvent;
+import java.awt.Dimension;
 import java.io.File;
-import java.io.PrintWriter;
+import javax.swing.*;
+//import java.io.PrintWriter;
+import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.FileInputStream;
+import java.io.IOException;
 //
 class ScanCleanDialog extends JDialog{
 	private String[] debianLogs = {"/var/log/alternatives.log", "/var/log/auth.log", "/var/log/bootstrap.log", "/var/log/daemon.log", "/var/log/dpkg.log",
@@ -28,6 +35,8 @@ class ScanCleanDialog extends JDialog{
 	private int checkedFilesCounter;
 	private int lines;
 	public String[] checkedFiles;
+	//public String[] checkedFilesDebian;
+	//public String[] checkedFilesWindows;
 	//
 	public ScanCleanDialog(DialogFrame owner){ // JFrame
 		super(owner, "Scan and Clean", true);
@@ -38,7 +47,8 @@ class ScanCleanDialog extends JDialog{
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		final DefaultListModel<String> listModel = new DefaultListModel<>();
 		File checkFile = null;
-		setTitle("isDebian(): " + owner.isDebian() + " isWindows(): " + owner.isWindows());
+		setTitle("Scanned files");
+		//setTitle("isDebian(): " + owner.isDebian() + " isWindows(): " + owner.isWindows());
 		if(owner.isDebian()){
 			checkedFiles = new String[debianLogs.length];
 			for (int i = 0; i < debianLogs.length; i++) { // change progressbar here
@@ -47,6 +57,8 @@ class ScanCleanDialog extends JDialog{
 					checkedFiles[i] = debianLogs[i];
 					listModel.addElement(checkedFiles[i]);
 					checkedFilesCounter++;
+				}else{
+					checkedFiles[i] = null;
 				}
 			}
 		}
@@ -58,12 +70,14 @@ class ScanCleanDialog extends JDialog{
 					checkedFiles[i] = windowsLogs[i];
 					listModel.addElement(checkedFiles[i]);
 					checkedFilesCounter++;
+				}else{
+					checkedFiles[i] = "Error";
 				}
 			}
 			//
 		}
-		final JList<String> list = new JList<>(listModel);
-        list.setFocusable(false);
+        JList<String> list = new JList<>(listModel);
+        list.setFocusable(false);  
         list.setVisibleRowCount(15);
         mainPanel.add(new JScrollPane(list));
         //
@@ -72,23 +86,38 @@ class ScanCleanDialog extends JDialog{
         //
         JButton cleanButton = new JButton("Clean");
         cleanButton.setFocusable(false);
+        final DefaultListModel<String> listModelError = new DefaultListModel<>();
         cleanButton.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent e){
-        		int border = 0;
-        		if(owner.isDebian()) border = debianLogs.length;
-        		if(owner.isWindows()) border = windowsLogs.length;
-        		for (int i = 0; i < border; i++) {
-        			File temp = new File(checkedFiles[i]);
+        		for (int i = 0; i < checkedFiles.length; i++) {
+        			int k = 0;
         			try{
-        				PrintWriter eraser = new PrintWriter(temp);
-        				eraser.write("");
-        				eraser.close();
-        			}catch(FileNotFoundException exc){
-        				System.out.println("!!!!!!!!!!!!!!!!!!" + exc);
-        			}
+        				FileWriter eraser = new FileWriter(checkedFiles[i]);
+        				if(eraser != null && checkedFiles[i] != null) {
+	        				eraser.write(0);
+	        				eraser.close();
+        				}
+        			}catch(NullPointerException ex){
+        				//System.out.println(i + " " + checkedFiles[i] + " " + ex);
+        				listModelError.addElement(debianLogs[i]);
+        				//errorArray[i] = checkedFiles[i];
+        			}catch(IOException ioexc){
+        				System.out.println(ioexc);
+        			} 
         		}
-        	}
+        		JList<String> listError = new JList<>(listModelError);
+        		listError.setBackground(Color.RED);
+	        	JScrollPane scrollPane = new JScrollPane(listError);  
+				// textArea.setLineWrap(true);  
+				// textArea.setWrapStyleWord(true); 
+				scrollPane.setPreferredSize( new Dimension( 400, 200 ) );
+				JOptionPane.showMessageDialog(null, scrollPane, "Permission denied",  
+                JOptionPane.INFORMATION_MESSAGE);
+	        }		
+        	//errorList.setFocusable(false);  
+        	//errorList.setVisibleRowCount(15);
         });
+        //
         buttonsPanel.add(cleanButton);
         //
         JButton cancelButton = new JButton("Cancel");
@@ -99,6 +128,7 @@ class ScanCleanDialog extends JDialog{
         	}
         });
         buttonsPanel.add(cancelButton);
+        buttonsPanel.add(new JLabel("Files checked: " + checkedFilesCounter));
         add(mainPanel);
 	}
 }
