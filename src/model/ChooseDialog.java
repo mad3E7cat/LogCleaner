@@ -1,8 +1,12 @@
+package model;
+//import view.DrawChooseDialog;
+import model.DialogFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.awt.event.ActionEvent;
@@ -10,16 +14,23 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.*;
+import java.io.FileNotFoundException;
+
 /*
  Modal dialog window
 */
-class ChooseDialog extends JDialog{
+public class ChooseDialog extends JDialog{
 	private JCheckBox debianBox;
 	private JCheckBox windowsBox;
+	private boolean isDebian;
+	private boolean isWindows;
 	private String systems;
-	private JLabel serverInfoLabel;
 	public ChooseDialog(DialogFrame owner){ // JFrame
 		super(owner, "Scan for OS's", true);
+		//DrawChooseDialog draw = new DrawChooseDialog(this);
 		systems = "";
 		//init checkboxes
 		debianBox = new JCheckBox("Debian");
@@ -31,7 +42,6 @@ class ChooseDialog extends JDialog{
 		checkPanel.add(debianBox);
 		checkPanel.add(windowsBox);
 		// 
-		serverInfoLabel = new JLabel(""); 
 		add(new JLabel("Choose operating system(only one):"), BorderLayout.NORTH); // add text
 		debianBox.addItemListener(new ItemListener(){ // handle action, when"debian" checkbox is chosen
 			public void itemStateChanged(ItemEvent e){
@@ -43,6 +53,7 @@ class ChooseDialog extends JDialog{
 				}
 			}	
 		});
+		//////////////////////////////////////////////////////////////////////////////////////////
 		windowsBox.addItemListener(new ItemListener(){
 			public void itemStateChanged(ItemEvent e){
 				Object source = e.getItemSelectable();
@@ -57,13 +68,9 @@ class ChooseDialog extends JDialog{
 		JButton okButton = new JButton("OK");
 		okButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				owner.remove(serverInfoLabel);
 				debianBox.setSelected(false);
 				windowsBox.setSelected(false);
 				setVisible(false);
-				//serverInfoLabel = new JLabel("Systems chosen: " + systems + " isDebian(): " + owner.isDebian() + " isWindows(): " + owner.isWindows());
-				owner.add(serverInfoLabel, BorderLayout.NORTH);
-				owner.setVisible(true);
 				systems = "";
 			}
 		});
@@ -80,4 +87,37 @@ class ChooseDialog extends JDialog{
 		add(buttonContainer, BorderLayout.SOUTH);
 		setSize(400, 400);
 	}
+	public JCheckBox getWindowsCheckbox(){
+		return windowsBox;
+	}
+	public void setWindowsCheckbox(JCheckBox chBox){
+		windowsBox = chBox;
+	}
+	public JCheckBox getDebianCheckbox(){
+		return debianBox;
+	}
+	public void setDebianCheckbox(JCheckBox chBox){
+		windowsBox = chBox;
+	}
+	public ChooseDialog getChooseDialog(){
+		return this;
+	}
+	public void setSystems(String sys){
+		systems = sys;
+	}
+	//
+	public boolean isWindows(){
+		return isWindows;
+	}
+	public boolean isDebian(){
+		return isDebian;
+	}
+	//
+	public void setSelectedDebianCheckbox(boolean flag){
+		debianBox.setSelected(flag);
+	}
+	public void setSelectedWindowsCheckbox(boolean flag){
+		windowsBox.setSelected(flag);
+	}
+
 }

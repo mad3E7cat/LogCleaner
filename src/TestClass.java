@@ -1,5 +1,6 @@
 import java.awt.EventQueue;
 import javax.swing.JFrame;
+import model.DialogFrame;
 // 
 public class TestClass {
 	public static void main(String[] args) {

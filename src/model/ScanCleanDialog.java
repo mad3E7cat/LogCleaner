@@ -1,3 +1,5 @@
+package model;
+import model.DialogFrame;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -15,20 +17,18 @@ import java.awt.event.ItemEvent;
 import java.awt.Dimension;
 import java.io.File;
 import javax.swing.*;
-//import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 //
-class ScanCleanDialog extends JDialog{
+public class ScanCleanDialog extends JDialog{
 	private String[] debianLogs = {"/var/log/alternatives.log", "/var/log/auth.log", "/var/log/bootstrap.log", "/var/log/daemon.log", "/var/log/dpkg.log",
 							 "/var/log/kernlog.log", "/var/log/macchanger.log", "/var/log/user.log", "/var/log/wvdialconf.log", "/var/log/Xorg.0.log",
 							 "/var/log/messages", "/var/log/btmp", "/var/log/debug", "/var/log/dmesg", "/var/log/faillog",
 							 "/var/log/lastlog", "/var/log/syslog", "/var/log/wtmp", "/var/log/apache2/access.log", "/var/log/apache2/error.log",
-							 "/var/log/apache2/other_vhosts_access.log", "/var/log/apt/history.log", "/var/log/apt/term.log", "/var/log/chkrootkit", 
-							 "/var/log/stunnel4/stunnel.log"};
+							 "/var/log/apache2/other_vhosts_access.log", "/var/log/apt/history.log", "/var/log/apt/term.log", "/var/log/stunnel4/stunnel.log"};
 	private String[] windowsLogs = {"C:\\WINDOWS\\system32\\config\\Internet.evt", "C:\\WINDOWS\\system32\\config\\SecEvent.evt", "C:\\WINDOWS\\system32\\config\\SysEvent.evt",
 									"C:\\WINDOWS\\system32\\config\\system.sav", "C:\\WINDOWS\\system32\\config\\AppEvent.evt", "C:\\WINDOWS\\system32\\config\\default.sav",
 									"C:\\WINDOWS\\system32\\config\\software.sav"};
@@ -48,10 +48,9 @@ class ScanCleanDialog extends JDialog{
 		final DefaultListModel<String> listModel = new DefaultListModel<>();
 		File checkFile = null;
 		setTitle("Scanned files");
-		//setTitle("isDebian(): " + owner.isDebian() + " isWindows(): " + owner.isWindows());
 		if(owner.isDebian()){
 			checkedFiles = new String[debianLogs.length];
-			for (int i = 0; i < debianLogs.length; i++) { // change progressbar here
+			for (int i = 0; i < debianLogs.length; i++) { 
 				checkFile = new File(debianLogs[i]);
 				if(checkFile.canWrite() && checkFile.exists()){
 					checkedFiles[i] = debianLogs[i];
@@ -64,17 +63,16 @@ class ScanCleanDialog extends JDialog{
 		}
 		if(owner.isWindows()){
 			checkedFiles = new String[windowsLogs.length];
-			for (int i = 0; i < windowsLogs.length; i++) { // change progressbar here
+			for (int i = 0; i < windowsLogs.length; i++) { 
 				checkFile = new File(windowsLogs[i]);
 				if(checkFile.canWrite() && checkFile.exists()){
 					checkedFiles[i] = windowsLogs[i];
 					listModel.addElement(checkedFiles[i]);
 					checkedFilesCounter++;
 				}else{
-					checkedFiles[i] = "Error";
+					checkedFiles[i] = null;
 				}
 			}
-			//
 		}
         JList<String> list = new JList<>(listModel);
         list.setFocusable(false);  
@@ -90,7 +88,6 @@ class ScanCleanDialog extends JDialog{
         cleanButton.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent e){
         		for (int i = 0; i < checkedFiles.length; i++) {
-        			int k = 0;
         			try{
         				FileWriter eraser = new FileWriter(checkedFiles[i]);
         				if(eraser != null && checkedFiles[i] != null) {
@@ -98,9 +95,14 @@ class ScanCleanDialog extends JDialog{
 	        				eraser.close();
         				}
         			}catch(NullPointerException ex){
-        				//System.out.println(i + " " + checkedFiles[i] + " " + ex);
-        				listModelError.addElement(debianLogs[i]);
-        				//errorArray[i] = checkedFiles[i];
+        				if(owner.isDebian())
+        				{
+        					listModelError.addElement(debianLogs[i]);
+        				}
+        				if(owner.isWindows()){
+        					listModelError.addElement(windowsLogs[i]);
+        				}	
+        				
         			}catch(IOException ioexc){
         				System.out.println(ioexc);
         			} 
@@ -130,5 +132,11 @@ class ScanCleanDialog extends JDialog{
         buttonsPanel.add(cancelButton);
         buttonsPanel.add(new JLabel("Files checked: " + checkedFilesCounter));
         add(mainPanel);
+	}
+	public String getDebianFile(int idx){
+		return debianLogs[idx];
+	}
+	public String getWindowsFile(int idx){
+		return windowsLogs[idx];
 	}
 }
