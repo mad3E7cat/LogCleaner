@@ -5,8 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 public class FileEraser{
     private String[] files;
-    private DefaultListModel lME;
-    public FileEraser(ScanCleanDialog scanCleanDlg){
+    // private DefaultListModel<String> lME;
+    public FileEraser(ScanCleanDialog scanCleanDlg, DefaultListModel<String> lME){
         // files = scanCleanDlg.getCheckedFiles();
         if(scanCleanDlg.ownerIsDebian()) files = scanCleanDlg.getDebianFiles();
         if(scanCleanDlg.ownerIsWindows()) files = scanCleanDlg.getWindowsFiles();    
@@ -18,6 +18,7 @@ public class FileEraser{
                             eraser.close();
                         }
                     }catch(NullPointerException ex){
+                        scanCleanDlg.setError(true);
                         if(scanCleanDlg.ownerIsDebian())
                         {
                             lME.addElement(scanCleanDlg.getDebianFile(i));
@@ -29,7 +30,7 @@ public class FileEraser{
                         System.out.println(ioexc);
                     } 
                 }
-        //scanCleanDlg.setListModelError(lME);
+        scanCleanDlg.setListModelError(lME);
     }
 }
 

@@ -37,12 +37,14 @@ public class ScanCleanDialog extends JDialog{
 	public String[] checkedFiles;
 	private boolean isDeb;
 	private boolean isWin;
+	private boolean error;
 	private ScanCleanDialog thisObj;
 	private DefaultListModel<String> listModelError;
 	public ScanCleanDialog(DialogFrame owner){ // JFrame
 
 		super(owner, "Scan and Clean", true);
 		setSize(500, 300);
+		error = false;
 		isDeb = owner.isDebian();
 		isWin = owner.isWindows();
 		checkedFilesCounter = 0;
@@ -92,41 +94,14 @@ public class ScanCleanDialog extends JDialog{
         thisObj = this;
         cleanButton.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent e){
-        		boolean flg = false;
-        		//
-        		// try{
-        	 	FileEraser erase = new FileEraser(thisObj);
-        		// }catch(NullPointerException ex){
-        		// 	System.out.println(ex+ " ");
-        		// }
-        		//
-        		// for (int i = 0; i < checkedFiles.length; i++) {
-        		// 	try{
-        		// 		FileWriter eraser = new FileWriter(checkedFiles[i]);
-        		// 		if(eraser != null && checkedFiles[i] != null) {
-	        	// 			eraser.write(0);
-	        	// 			eraser.close();
-        		// 		}
-        		// 	}catch(NullPointerException ex){
-        		// 		flg = true;
-        		// 		if(owner.isDebian())
-        		// 		{
-        		// 			listModelError.addElement(debianLogs[i]);
-        		// 		}
-        		// 		if(owner.isWindows()){
-        		// 			listModelError.addElement(windowsLogs[i]);
-        		// 		}		
-        		// 	}catch(IOException ioexc){
-        		// 		System.out.println(ioexc);
-        		// 	} 
-        		// }
+        	 	FileEraser erase = new FileEraser(thisObj, listModelError);
         		JList<String> listError = new JList<>(listModelError);
         		listError.setBackground(Color.RED);
 	        	JScrollPane scrollPane = new JScrollPane(listError);  
 				// textArea.setLineWrap(true);  
 				// textArea.setWrapStyleWord(true); 
 				scrollPane.setPreferredSize( new Dimension( 400, 200 ) );
-				if(flg){
+				if(error){
 					JOptionPane.showMessageDialog(null, scrollPane, "Permission denied",  
 	                JOptionPane.INFORMATION_MESSAGE);
 	            }
@@ -166,10 +141,10 @@ public class ScanCleanDialog extends JDialog{
 	public boolean ownerIsWindows(){
 		return isWin;
 	}
-	public void setListModelError(DefaultListModel lME){
-		listModelError = lME;
+	public void setListModelError(DefaultListModel<String> lME){
+		listModelError = (DefaultListModel<String>)lME;
 	}
-	// public ScanCleanDialog getScanCleanDialog(){
-	// 	return thisObj;
-	// }
+	public void setError(boolean flg){
+		error = flg;
+	}
 }
