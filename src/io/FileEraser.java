@@ -5,11 +5,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 public class FileEraser{
     private String[] files;
-    // private DefaultListModel<String> lME;
+    ScanCleanDialog scnClnDlg;
+    private DefaultListModel<String> lME;
     public FileEraser(ScanCleanDialog scanCleanDlg, DefaultListModel<String> lME){
         // files = scanCleanDlg.getCheckedFiles();
+        scnClnDlg = scanCleanDlg;
+        this.lME = lME;
         if(scanCleanDlg.ownerIsDebian()) files = scanCleanDlg.getDebianFiles();
-        if(scanCleanDlg.ownerIsWindows()) files = scanCleanDlg.getWindowsFiles();    
+        if(scanCleanDlg.ownerIsWindows()) files = scanCleanDlg.getWindowsFiles();
+        eraseFiles();
+    }
+    public FileEraser(){};
+    public void eraseFiles(){
+            
         for (int i = 0; i < files.length; i++) {
                     try{
                         FileWriter eraser = new FileWriter(files[i]);
@@ -18,19 +26,19 @@ public class FileEraser{
                             eraser.close();
                         }
                     }catch(NullPointerException ex){
-                        scanCleanDlg.setError(true);
-                        if(scanCleanDlg.ownerIsDebian())
+                        scnClnDlg.setError(true);
+                        if(scnClnDlg.ownerIsDebian())
                         {
-                            lME.addElement(scanCleanDlg.getDebianFile(i));
+                            lME.addElement(scnClnDlg.getDebianFile(i));
                         }
-                        if(scanCleanDlg.ownerIsWindows()){
-                            lME.addElement(scanCleanDlg.getDebianFile(i));
+                        if(scnClnDlg.ownerIsWindows()){
+                            lME.addElement(scnClnDlg.getDebianFile(i));
                         }       
                     }catch(IOException ioexc){
                         System.out.println(ioexc);
                     } 
                 }
-        scanCleanDlg.setListModelError(lME);
+        scnClnDlg.setListModelError(lME);
     }
 }
 

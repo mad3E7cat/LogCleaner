@@ -1,5 +1,6 @@
 package model;
 import io.FileEraser;
+import io.FileChecker;
 import model.DialogFrame;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -46,6 +47,11 @@ public class ScanCleanDialog extends JDialog{
 		super(owner, "Scan and Clean", true);
 		setSize(500, 300);
 		error = false;
+		FileChecker check = new FileChecker(debianLogs);
+		if(check.isOk()) JOptionPane.showMessageDialog(null, "It seems like all files exist and can be wiped...", "Files are OK...",  
+	                JOptionPane.INFORMATION_MESSAGE);
+		if(!check.isOk()) JOptionPane.showMessageDialog(null, "It seems like not all files are available for wiping...", "Alert!",  
+	                JOptionPane.INFORMATION_MESSAGE);
 		isDeb = owner.isDebian();
 		isWin = owner.isWindows();
 		checkedFilesCounter = 0;
