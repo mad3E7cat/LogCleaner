@@ -35,17 +35,21 @@ public class ScanCleanDialog extends JDialog{
 	private int checkedFilesCounter;
 	private int lines;
 	public String[] checkedFiles;
-	//public String[] checkedFilesDebian;
-	//public String[] checkedFilesWindows;
-	//
+	private boolean isDeb;
+	private boolean isWin;
+	private ScanCleanDialog thisObj;
+	private DefaultListModel<String> listModelError;
 	public ScanCleanDialog(DialogFrame owner){ // JFrame
+
 		super(owner, "Scan and Clean", true);
 		setSize(500, 300);
+		isDeb = owner.isDebian();
+		isWin = owner.isWindows();
 		checkedFilesCounter = 0;
 		JPanel mainPanel = new JPanel(); // main panel for list and buttons
 		mainPanel.setLayout(new BorderLayout(5,5));
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		final DefaultListModel<String> listModel = new DefaultListModel<>();
+		DefaultListModel<String> listModel = new DefaultListModel<>();
 		File checkFile = null;
 		setTitle("Scanned files");
 		if(owner.isDebian()){
@@ -84,37 +88,48 @@ public class ScanCleanDialog extends JDialog{
         //
         JButton cleanButton = new JButton("Clean");
         cleanButton.setFocusable(false);
-        final DefaultListModel<String> listModelError = new DefaultListModel<>();
+        listModelError = new DefaultListModel<>();
+        thisObj = this;
         cleanButton.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent e){
-        		for (int i = 0; i < checkedFiles.length; i++) {
-        			try{
-        				FileWriter eraser = new FileWriter(checkedFiles[i]);
-        				if(eraser != null && checkedFiles[i] != null) {
-	        				eraser.write(0);
-	        				eraser.close();
-        				}
-        			}catch(NullPointerException ex){
-        				if(owner.isDebian())
-        				{
-        					listModelError.addElement(debianLogs[i]);
-        				}
-        				if(owner.isWindows()){
-        					listModelError.addElement(windowsLogs[i]);
-        				}	
-        				
-        			}catch(IOException ioexc){
-        				System.out.println(ioexc);
-        			} 
-        		}
+        		boolean flg = false;
+        		//
+        		// try{
+        	 	FileEraser erase = new FileEraser(thisObj);
+        		// }catch(NullPointerException ex){
+        		// 	System.out.println(ex+ " ");
+        		// }
+        		//
+        		// for (int i = 0; i < checkedFiles.length; i++) {
+        		// 	try{
+        		// 		FileWriter eraser = new FileWriter(checkedFiles[i]);
+        		// 		if(eraser != null && checkedFiles[i] != null) {
+	        	// 			eraser.write(0);
+	        	// 			eraser.close();
+        		// 		}
+        		// 	}catch(NullPointerException ex){
+        		// 		flg = true;
+        		// 		if(owner.isDebian())
+        		// 		{
+        		// 			listModelError.addElement(debianLogs[i]);
+        		// 		}
+        		// 		if(owner.isWindows()){
+        		// 			listModelError.addElement(windowsLogs[i]);
+        		// 		}		
+        		// 	}catch(IOException ioexc){
+        		// 		System.out.println(ioexc);
+        		// 	} 
+        		// }
         		JList<String> listError = new JList<>(listModelError);
         		listError.setBackground(Color.RED);
 	        	JScrollPane scrollPane = new JScrollPane(listError);  
 				// textArea.setLineWrap(true);  
 				// textArea.setWrapStyleWord(true); 
 				scrollPane.setPreferredSize( new Dimension( 400, 200 ) );
-				JOptionPane.showMessageDialog(null, scrollPane, "Permission denied",  
-                JOptionPane.INFORMATION_MESSAGE);
+				if(flg){
+					JOptionPane.showMessageDialog(null, scrollPane, "Permission denied",  
+	                JOptionPane.INFORMATION_MESSAGE);
+	            }
 	        }		
         	//errorList.setFocusable(false);  
         	//errorList.setVisibleRowCount(15);
@@ -139,4 +154,22 @@ public class ScanCleanDialog extends JDialog{
 	public String getWindowsFile(int idx){
 		return windowsLogs[idx];
 	}
+	public String[] getWindowsFiles(){
+		return windowsLogs;
+	}
+	public String[] getDebianFiles(){
+		return debianLogs;
+	}
+	public boolean ownerIsDebian(){
+		return isDeb;
+	}
+	public boolean ownerIsWindows(){
+		return isWin;
+	}
+	public void setListModelError(DefaultListModel lME){
+		listModelError = lME;
+	}
+	// public ScanCleanDialog getScanCleanDialog(){
+	// 	return thisObj;
+	// }
 }
