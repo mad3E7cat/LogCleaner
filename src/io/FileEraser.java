@@ -1,4 +1,4 @@
-package model;
+package io;
 import model.*;
 import javax.swing.DefaultListModel;
 import java.io.FileWriter;

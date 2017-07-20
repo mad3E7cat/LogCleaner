@@ -1,4 +1,5 @@
 package model;
+import io.FileEraser;
 import model.DialogFrame;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -98,8 +99,6 @@ public class ScanCleanDialog extends JDialog{
         		JList<String> listError = new JList<>(listModelError);
         		listError.setBackground(Color.RED);
 	        	JScrollPane scrollPane = new JScrollPane(listError);  
-				// textArea.setLineWrap(true);  
-				// textArea.setWrapStyleWord(true); 
 				scrollPane.setPreferredSize( new Dimension( 400, 200 ) );
 				if(error){
 					JOptionPane.showMessageDialog(null, scrollPane, "Permission denied",  
